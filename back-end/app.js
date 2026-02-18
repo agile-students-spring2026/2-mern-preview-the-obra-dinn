@@ -12,6 +12,9 @@ app.use(cors()) // allow cross-origin resource sharing
 app.use(express.json()) // decode JSON-formatted incoming POST data
 app.use(express.urlencoded({ extended: true })) // decode url-encoded incoming POST data
 
+// serve static files from the public folder
+app.use(express.static('public'))
+
 // connect to database
 mongoose
   .connect(`${process.env.DB_CONNECTION_STRING}`)
@@ -76,6 +79,22 @@ app.post('/messages/save', async (req, res) => {
       status: 'failed to save the message to the database',
     })
   }
+})
+
+// a route to handle fetching about us information
+app.get('/about_us', (req, res) => {
+  const aboutData = {
+    title: 'About Us',
+    imageUrl: 'http://localhost:5002/images/profile.jpg',
+    imageDescription: 'Me and the car stuck in the middle of nowhere during heavy snow',
+    paragraphs: [
+      'Hello! This is Chen Liu, a computer science senior at NYU. On my way to becoming jobless after graduation :)',
+      'One of my proudest project was creating a AI assistant that provides accurate, detailed, and spoiler free assistant for video games, using RAG and some finetuning. Ahead of Xbox (Microsoft) and Google. But it is now obsolete after the release of GPT-5 and other advanced general purpose LLMs. I\'ve also reached the top of the highest mountain in Africa - Mt.Kilimanjaro at the age of 16.',
+      'In my free time, I enjoy playing video games, as well as adding Chinese subtitles on YouTube videos that I find interesting using LLM workflow. Which accelerates the process by at least 5x compared to doing it manually.',
+    ],
+  }
+  
+  res.json(aboutData)
 })
 
 // export the express app we created to make it available to other modules
